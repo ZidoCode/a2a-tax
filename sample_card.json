@@ -1,0 +1,88 @@
+{
+  "name": "travel-orchestrator",
+  "description": "Plans multi-city trips by delegating to flight, hotel and activity agents over A2A. Handles itineraries, price checks and rebooking flows across providers.",
+  "version": "1.4.2",
+  "protocolVersion": "0.2.9",
+  "url": "https://travel.example.com/a2a",
+  "preferredTransport": "JSONRPC",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "plan_trip",
+      "name": "Plan trip",
+      "description": "Builds a full multi-city itinerary with budget constraints, layover rules and loyalty preferences",
+      "tags": [
+        "travel",
+        "planning"
+      ]
+    },
+    {
+      "id": "rebook",
+      "name": "Rebooking",
+      "description": "Rebooks disrupted legs automatically when carrier schedule changes are detected",
+      "tags": [
+        "travel",
+        "disruption"
+      ]
+    },
+    {
+      "id": "price_watch",
+      "name": "Price watch",
+      "description": "Monitors fare drops on saved routes and reports delta against purchase price",
+      "tags": [
+        "travel",
+        "pricing"
+      ]
+    },
+    {
+      "id": "visa_check",
+      "name": "Visa check",
+      "description": "Checks visa requirements and transit rules for each passport-leg combination",
+      "tags": [
+        "travel",
+        "compliance"
+      ]
+    },
+    {
+      "id": "split_bill",
+      "name": "Split billing",
+      "description": "Allocates shared trip costs across travelers with receipts export",
+      "tags": [
+        "travel",
+        "billing"
+      ]
+    }
+  ],
+  "securitySchemes": {
+    "google": {
+      "type": "oauth2",
+      "flows": {
+        "authorizationCode": {
+          "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+          "tokenUrl": "https://oauth2.googleapis.com/token",
+          "scopes": {
+            "openid": "openid"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "google": [
+        "openid"
+      ]
+    }
+  ]
+}
