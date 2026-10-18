@@ -188,11 +188,13 @@ def report(card, polls, history_len, price_per_mtok):
     lines.append(f"  TOTAL per task           : {base['total']:>7,} tok  (~${usd(base['total']):.4f})")
     lines.append("")
     lines.append("  with the three-line fix:")
-    lines.append(f"    cache the card         : -{base['card_tokens']:>7,} tok/task")
-    lines.append(f"    cap history at 10      : {capped['total']:>7,} tok total")
-    savings = base["total"] - capped["total"]
+    lines.append(f"    cache the card         : -{base['card_tokens']:>7,} tok/task (fetched once per session)")
+    lines.append(f"    cap history at 10      : -{base['total'] - capped['total']:>7,} tok/task")
+    # Both fixes apply: cap the history AND stop re-fetching the card.
+    fixed = cached["total"]
+    savings = base["total"] - fixed
     pct = 100 * savings / base["total"] if base["total"] else 0
-    lines.append(f"    TOTAL after fix        : {capped['total']:>7,} tok  (~${usd(capped['total']):.4f})")
+    lines.append(f"    TOTAL after fix        : {fixed:>7,} tok  (~${usd(fixed):.4f})")
     lines.append(f"    savings                : {savings:>7,} tok/task  ({pct:.0f}%)")
     return "\n".join(lines)
 

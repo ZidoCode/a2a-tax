@@ -37,10 +37,10 @@ $ a2a-tax report https://travel-agent.example.com --polls 45 --history-len 50
   TOTAL per task           : 107,321 tok  (~$0.32)
 
   with the three-line fix:
-    cache the card         : -    391 tok/task
-    cap history at 10      :  23,501 tok total
-    TOTAL after fix        :  23,501 tok  (~$0.07)
-    savings                :  83,820 tok/task  (78%)
+    cache the card         : -    391 tok/task (fetched once per session)
+    cap history at 10      : - 83,820 tok/task
+    TOTAL after fix        :  23,110 tok  (~$0.07)
+    savings                :  84,211 tok/task  (78%)
 ```
 
 ## The three-line fix

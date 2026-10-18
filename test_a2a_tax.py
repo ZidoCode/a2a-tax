@@ -116,6 +116,31 @@ class TestReport(unittest.TestCase):
         self.assertGreater(pct, 50)
 
 
+class TestFixAccounting(unittest.TestCase):
+    def test_total_after_fix_applies_every_listed_fix(self):
+        # The fix block lists card caching AND the history cap; the headline
+        # total must reflect both, not just the cap.
+        import re
+        card = {"name": "x", "description": "y" * 40, "skills": []}
+        out = t.report(card, polls=45, history_len=50, price_per_mtok=3.0)
+        fixed = int(re.search(r"TOTAL after fix\s*:\s*([\d,]+)", out).group(1).replace(",", ""))
+        base_total = t.model_task(card, 45, 50)["total"]
+        capped = t.model_task(card, 45, 50, cap=10)["total"]
+        card_t = t.model_task(card, 45, 50)["card_tokens"]
+        self.assertEqual(fixed, capped - card_t)
+        self.assertLess(fixed, capped)
+
+    def test_savings_matches_reported_total(self):
+        card = {"name": "x", "description": "y" * 40, "skills": []}
+        out = t.report(card, polls=45, history_len=50, price_per_mtok=3.0)
+        pct = int(out.strip().split("savings")[1].split("(")[1].rstrip(")%\n"))
+        base_total = t.model_task(card, 45, 50)["total"]
+        capped = t.model_task(card, 45, 50, cap=10)["total"]
+        card_t = t.model_task(card, 45, 50)["card_tokens"]
+        expect = round(100 * (base_total - (capped - card_t)) / base_total)
+        self.assertEqual(pct, expect)
+
+
 class TestFetchCard(unittest.TestCase):
     def test_loads_local_file(self):
         p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_card.json")
